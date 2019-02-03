@@ -1,0 +1,96 @@
+#             JOINER/LEAVER LOG
+On Join;Protected;Say Welcome our VIP ^%p%^!!!
+On Join;Say Welcome  ^%p%^!!!
+On Leave;Say ^%p%^0 has left the server
+On Spawn;Serverfirst;PlayerYell 15 YY 18068914
+On Spawn;Serverfirst;PlayerSay you can type !votenuke to start a nuke against base raping
+#High ping kick
+On Spawn;Not protected;Not Admin;Serverfirst;If %ping% > 250;Set %highpingc% 1;PlayerSay Your ping is too high,go to check your network or you will be kicked!
+On Spawn;Not protected;Not Admin;if %ping% > 250;if %highpingc% > 0;if %highpingc% < 3;Incr %highpingc%;PlayerSay Last warning for high ping
+On Spawn;Not protected;Not Admin;if %highpingc% > 2;kick your ping is too high;Set %highpingc% 0;
+#Information of your killer
+On Spawn;ServerFirst;Set %kills2[%p%]% 0;Set %deaths2[%p%]% 0;Set %hs2[%p%]% 0
+On Kill;Incr %kills2[%p%]%
+On Kill;Headshot;incr %hs2[%p%]%
+On Say;Admin;Text lead;Exec Squad.Leader %ptk% %psk% %p%
+On Spawn;PlayerCount 1;Incr %deaths2[%p%]%
+On Kill;Set %proc.2[%p%]% %hs2[%p%]% / %kills2[%p%]% * 100
+On Kill;Set %kd2[%p%]% %kills2[%p%]%/%deaths2[%p%]%
+On Kill;If %deaths2[%p%]% = 0;VictimSay You have been killed by %p%, Kills: %kills2[%p%]%  Deaths: %deaths2[%p%]%  K/D: %kills2[%p%]% Hs/K: %proc.2[%p%]%%
+On Kill;If %deaths2[%p%]% > 0;VictimSay You have been killed by %p%, Kills: %kills2[%p%]%  Deaths: %deaths2[%p%]%  K/D: %kd2[%p%]% Hs/K: %proc.2[%p%]%%
+On Say;Protected;Text !kdacc;TargetPlayer;If %deaths2[%p%]% = 0;PlayerSay %p%, Kills: %kills2[%t%]%  Deaths: %deaths2[%t%]%  K/D: %kills2[%t%]% Hs/K: %proc.2[%t%]%%
+On Say;Protected;Text !kdacc;TargetPlayer;If %deaths2[%p%]% > 0;PlayerSay %p%, Kills: %kills2[%t%]%  Deaths: %deaths2[%t%]%  K/D: %kd2[%t%]% Hs/K: %proc.2[%t%]%%
+#Impossible Kills
+#On Kill;Not Admin;PlayerCount 2;Weapon Weapons/Gadgets/SOFLAM/SOFLAM_PDA,Weapons/Gadgets/T-UGS/T-UGS,Medkit;Ban [AUTOADMIN] %p% Impossible Kills Code 0
+#On Kill;Not Admin;Damage Melee;Rate 8 30;Ban [AUTOADMIN] %p% Impossible Kills Code 1
+#On Kill;Not Admin;PlayerCount 1;Weapon Death;Rate 20 30;Ban [AUTOADMIN] %p% Impossible Kills Code 2
+#On Kill;Not Admin;Not Damage Explosive;Not Damage ProjectileExplosive;Rate 25 40;Ban [AUTOADMIN] %p% Impossible Kills Code 3
+#On Kill;Not Admin;Not Damage Explosive;Not Damage ProjectileExplosive;Rate 60 200;Ban [AUTOADMIN] %p% Impossible Kills Code 4
+#On Kill;Not Admin;PlayerCount 1;Headshot;Rate 8 15;Ban [AUTOADMIN] %p% Impossible Kills Code 5
+#On Kill;Not Admin;PlayerCount 1;Headshot;Rate 10 25;Ban [AUTOADMIN] %p% Impossible Kills Code 6
+#Admin's PB kick
+On Say;Admin;Text !pkick;TargetPlayer;TargetAction PBkick 0 No Packet Flow
+On Say;Admin;Text @pkick;TargetPlayer;TargetAction PBkick 0 No Packet Flow
+On Say;Admin;Text !pban;TargetPlayer;TargetAction PBban 1440
+#Sniper Limit
+On Spawn;Not Protected;Not Admin;ServerFirst;Set %server_sniperlimit% 4
+On Spawn;ServerFirst;Not Protected;Not Admin;Set %psnipertime% 0
+On Kill;Not Protected;Not Admin;Damage SniperRifle;
+    If %server_sl_total[%ptk%]% >= %server_sniperlimit%;If %server_sl_setsniper[%p%]% == 0;If %server_sl_sniper[%p%]% == 0;PlayerSay %p% was killed by Sniper Limit for using %pt%, tpye !sniper to check slots;Incr %psnipertime[%p%]%;Exec admin.killPlayer %p%
+    If %server_sl_cancelsniper[%p%]% = 1;PlayerSay %p%, you don't have enough pribileges to use a sniper rifle on this server;Incr %psnipertime%;Kill
+    If %server_sl_sniper[%p%]% == 0;If %server_sl_cancelsniper% = 0;Incr %server_sl_total[%ptk%]%;Set %server_sl_sniper[%p%]% 1;TeamSay %p% has a sniper slot on %pt% %server_sl_total[%ptk%]%/%server_sniperlimit%
+On Kill;Not Protected;Not Admin;Not Damage SniperRifle;Not Damage Handgun;Not Damage Melee;Not Weapon M67;If %server_sl_sniper[%p%]% == 1;Set %server_sl_sniper[%p%]% 0;Decr %server_sl_total[%ptk%]%
+On Leave;Not Protected;Not Admin;If %server_sl_sniper[%p%]% == 1;Set %server_sl_sniper[%p%]% 0;Decr %server_sl_total[%ptk%]%;Set %psnipertime[%p%]% 0;Say Player ^%p%^ has canceled a slot of Sniper of %pt%;Now Sniper limit on %pt% is %server_sl_total[%ptk%]%/%server_sniperlimit%
+On Kill;Not Protected;Not Admin;Damage SniperRifle;If %psnipertime[%p%]% > 3;PBKICK 0 [AUTOADMIN] You don't have enough pribileges to use a sniper rifle on this server.
+On Spawn;Not kit Recon;If %psnipertime[%p%]% > 0;Decr %psnipertime[%p%]%
+On Spawn;Not kit Recon;If %server_sl_total[%ptk%]% > 0;Decr %server_sl_total[%ptk%]%;Say Player ^%p%^ has canceled a slot of Sniper
+On Say;Text !sniper;PlayerSay Sniper Slots:;PlayerSay US Army / Attackers: %server_sl_total[1]%/%server_sniperlimit%;PlayerSay Russian Army / Defenders: %server_sl_total[2]%/%server_sniperlimit%
+On Say;Admin;Text !setsniper;TargetPlayer;Set %server_sl_setsniper[%t%]% 1;PlayerSay %t% was guaranteed a sniper slot until round end.;TargetAction PlayerSay %t%, you was guaranteed a sniper slot by admin until round end.
+On Say;Admin;Text !cancelsniper;TargetPlayer;Set %server_sl_cancelsniper[%t%]% 1;PlayerSay %t% was cancelled a sniper slot until round end.;TargetAction PlayerSay %t%, you are not allowed to use a sniper rifle until round end.
+#Smart in-game Admin
+On Say;Admin;Text !ban;TargetPlayer;Say Banning Player %t% with Reason %targettext% (Admin: %p%);TargetAction Ban Banned by Admin %p% - %t% (Reason: %targettext%)
+On Say;Admin;Text @ban;TargetPlayer;PlayerSay Banning Player %t% with Reason %targettext% (Admin: %p%);TargetAction Ban Banned by Admin %p% - %t% (Reason: %targettext%)
+On Say;Admin;Text !kick;TargetPlayer;Say Kicking Player %t% with Reason %targettext% (Admin: %p%);TargetAction Kick Kicked by Admin %p% - %t% (Reason: %targettext%)
+On Say;Admin;Text @kick;TargetPlayer;PlayerSay Kicking Player %t% with Reason %targettext% (Admin: %p%);TargetAction Kick Kicked by Admin %p% - %t% (Reason: %targettext%)
+On Say;Admin;Text !tban;TargetPlayer;Say Banning Player %t% with Reason %targettext% (Admin: %p%);TargetAction tempban 1440 Banned by Admin %p% - %t% (Reason: %targettext%)
+On Say;Not Admin;Text !ban;PlayerSay You do not have enough pribileges to ban players.
+On Say;Not Admin;Text @ban;PlayerSay You do not have enough pribileges to ban players.
+On Say;Not Admin;Text !kick;PlayerSay You do not have enough pribileges to kick players.
+On Say;Not Admin;Text @kick;PlayerSay You do not have enough pribileges to kick players.
+On Say;Admin;Text !yell;Yell %targettext%
+On Say;Admin;Text !nextlevel;Exec admin.runNextLevel
+On Say;Admin;Text !kill;TargetPlayer;TargetAction Exec admin.killPlayer;TargetAction PlayerSay You have been killed by Admin
+#Shotgun Limit
+On Spawn;ServerFirst;Set %server_shotgunlimit% 3
+On Spawn;ServerFirst;Set %pshotguntime% 0
+On Kill;Not Protected;Damage Shotgun;
+    If %server_ssl_total[%ptk%]% >= %server_shotgunlimit%;If %server_sl_setshotgun[%p%]% == 0;If %server_sl_shotgun[%p%]% == 0;PlayerSay %p% was killed by Shotgun Limit for using %pt%, tpye !shotgun to check slots.;Incr %pshotguntime%;Kill
+    If %server_sl_cancelshotgun[%p%]% = 1;PlayerSay %p%, you don't have enough pribileges to use shotguns on this server;Incr %pshotguntime[%p%]%;Kill
+    If %server_sl_shotgun[%p%]% == 0;If %server_sl_cancelshotgun% = 0;Incr %server_ssl_total[%ptk%]%;Set %server_sl_shotgun[%p%]% 1;TeamSay %p% has shotgun slot on %pt% %server_ssl_total[%ptk%]%/%server_shotgunlimit%
+On Kill;Not Protected;Not Damage Shotgun;Not Damage Handgun;Not Damage Melee;Not Weapon M67;If %server_sl_shotgun[%p%]% == 1;Set %server_sl_shotgun[%p%]% 0;Decr %server_ssl_total[%ptk%]%
+On Leave;If %server_sl_shotgun[%p%]% == 1;Set %server_sl_shotgun[%p%]% 0;Decr %server_ssl_total[%ptk%]%
+On Kill;Not Protected;If %pshotguntime[%p%]% >= 3;Tempban 900 [AUTOADMIN] You don't have enough pribileges to use shotgun on this server
+On Say;Text !shotguns;PlayerSay Shotgun Slots:;PlayerSay US Army: %server_ssl_total[1]%/%server_shotgunlimit%;PlayerSay Russian Army: %server_ssl_total[2]%/%server_shotgunlimit%
+On Say;Admin;Text !setshotgun;TargetPlayer;Set %server_sl_setshotgun[%t%]% 1;PlayerSay %t% was guaranteed a shotgun slot until round end.;TargetAction PlayerSay %t%, you was guaranteed a shotgun slot until round end.
+On Say;Admin;Text !cancelshotgun;TargetPlayer;Set %server_sl_cancelshotgun[%t%]% 1;PlayerSay %t% was cancelled a shotgun slot until round end.;TargetAction PlayerSay %t%, you are not allowed to use a shotgun until round end.
+#Suicide
+On Say;Text !suicide;Exec admin.killPlayer %p%
+On Say;Text !killme;Exec admin.killPlayer %p%
+On Say;Not Admin;Text !votenuke;PlayerYell You can't start a nuke vote now!;Say %p% tried to start a vote nuke, but failed because of some reasons hahaha
+#Server Rulz
+On say;Text !rules;PlayerSay Snipers Limit 4 on each side,shotguns limit 3 on each side. VIP 20RMB/month. Welcome feedback and report bugs on qq, you will be awarded a vip if you do so.
+#maguanli
+On say;Text Fuck you admin;Text u admin;Text you admin;Serverfirst;Set %maguanli% 0;Exec admin.killPlayer %p%
+On say;Text Fuck you admin;Text u admin;Text you admin;
+      IF %maguanli% > 0 ;Incr %maguanli%;
+      IF %maguanli% == 3;PBKICK 0 No Packet Flow(AutoAdmin);Set %maguanli% 0;
+#Locker No explosive 
+#On Say;Admin;Text !pkick;TargetPlayer;TargetAction PBkick 0 No Packet Follow
+#On Say;Admin;Text !kill;TargetPlayer;TargetAction kill
+#On Spawn;Map MP_Prison;Serverfirst;PlayerYell 10 No explosive in Locker (except VIP)
+#On Spawn;Map MP_Prison;Not Protected;Not Admin;Serverfirst;PlayerYell 20 Only VIP can use explosive in Locker;
+#On kill;Map MP_Prison;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;Serverfirst;Set %Explosivekills% 1;Kill;PlayerYell 10 NO EXPLOSIVE!!!;Playersay Vip(20RMB/month) have no limits;
+#On kill;Map MP_Prison;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills% > 0;if %Explosivekills% < 3;Kill;PlayerYell Last WARN: Only vip can use explosive in Locker;Incr %Explosivekills%
+#On kill;Map MP_Prison;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills% > 2;Kick;Say player %p% has been kicked for using explosives in Locker, only VIP can use explosive in Locker!!!;Set %Explosivekills% 0
+#On Say;Admin;Text !fmove;TargetPlayer;Team 1;Exec admin.MovePlayer %p% 2 1 true
+#On Say;Admin;Text !fmove;TargetPlayer;Team 2;Exec admin.MovePlayer %p% 1 1 true
