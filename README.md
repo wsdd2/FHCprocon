@@ -12,4 +12,4 @@ limit_1_second_check: code<br>
 # The reason why I quit to run a Battlefield 4 server
 DDoS attacks happen almost every night, and i3D.net (I rent server from them) can't stop this situation, it seems that they have never 
 taken any effective steps to solve this terrible problem. What's more , i3D.net is the only ISP who provides Aisa servers for Battlefield 
-4, which means I have no choice but to rent from them.I'm really tired of fight against unknown-source attackers. So I decide to quit this.
+4, which means I have no choice but to rent from them. I'm really tired of fighting against unknown-source attackers. So I decide to quit this.
