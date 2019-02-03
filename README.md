@@ -1,13 +1,13 @@
 # FHCprocon
 All plugin codes and some things about my FHC server
 # The things you may need to know about insane limits for votenuke function
-This is the part of limit_1_second_check_expression, and rest of setup you need are below:
-limit_1_state: Enabled
-limit_1_name: Votenuke
-limit_1_evaluation: OnAnyChat
-limit_1_first_check: Expression
-limit_1_first_check_expression: (Regex.Match(server.Gamemode, @"(Conquest|Chain Link)").Success)
-limit_1_second_check: code
+This is the part of limit_1_second_check_expression, and rest of setup you need are below:<br>
+limit_1_state: Enabled<br>
+limit_1_name: Votenuke<br>
+limit_1_evaluation: OnAnyChat<br>
+limit_1_first_check: Expression<br>
+limit_1_first_check_expression: (Regex.Match(server.Gamemode, @"(Conquest|Chain Link)").Success)<br>
+limit_1_second_check: code<br>
 
 # The reason why I quit to run a Battlefield 4 server
 DDoS attacks happen almost every night, and i3D.net (I rent server from them) can't stop this situation, they seems that they have never 
