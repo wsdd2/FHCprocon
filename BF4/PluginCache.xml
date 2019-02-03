@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PluginCache>
+  <Entries>
+    <PluginCacheEntry>
+      <ClassName>CBasicInGameInfo</ClassName>
+      <DestinationPath>E:\procon_1.5.1.1\Plugins\BF4\CBasicInGameInfo.dll</DestinationPath>
+      <Hash>4d3da19567418bb64e0d9b34d97a25d9</Hash>
+      <SourcePath>E:\procon_1.5.1.1\Plugins\BF4\CBasicInGameInfo.cs</SourcePath>
+      <Stamp>2018-10-13T22:03:13.4887882+08:00</Stamp>
+    </PluginCacheEntry>
+    <PluginCacheEntry>
+      <ClassName>CInGameAdmin</ClassName>
+      <DestinationPath>E:\procon_1.5.1.1\Plugins\BF4\CInGameAdmin.dll</DestinationPath>
+      <Hash>cbdd8e1453ea9d5016bd257f7207a11d</Hash>
+      <SourcePath>E:\procon_1.5.1.1\Plugins\BF4\CInGameAdmin.cs</SourcePath>
+      <Stamp>2018-10-13T22:03:14.1024183+08:00</Stamp>
+    </PluginCacheEntry>
+    <PluginCacheEntry>
+      <ClassName>CSpambot</ClassName>
+      <DestinationPath>E:\procon_1.5.1.1\Plugins\BF4\CSpambot.dll</DestinationPath>
+      <Hash>d0c7cf5ffdbbb397d47858d06685a7a0</Hash>
+      <SourcePath>E:\procon_1.5.1.1\Plugins\BF4\CSpambot.cs</SourcePath>
+      <Stamp>2018-10-13T22:03:14.3260151+08:00</Stamp>
+    </PluginCacheEntry>
+  </Entries>
+</PluginCache>
