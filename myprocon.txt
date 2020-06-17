@@ -173,8 +173,12 @@ PlayerSay - !vip to get vip information
 PlayerSay - @myguid to check your own partial GUID, @loc to tell server location
 On Say;Text !vip;
 PlayerSay - VIP:20RMB/month; 
-PlayerSay - [No need to line up; Never got kicked (except autoadmin) ;No Weapon Limit];
+PlayerSay - No need to line up, Never got kicked (except autoadmin), No Weapon Limit;
 PlayerSay - Join QQ Group 299271357 to buy VIP
 On Say;Admin;Text !menu;
 PlayerSay - Command: !kill !kick !ban !tban !pkick !pban !fmove !nextlevel;
 PlayerSay - Command: !check_explo !ok_expl !cancel_expl !ban_expl @guid !nuke
+On Say;Text !time;
+PlayerSay - Time: [%ymd%] [%hms%]
+On Say;Text !alltime;
+Say - Time Now:[%ymd%] - [%hms%];Yell 8 Time Now:[%ymd%] - [%hms%]
