@@ -139,12 +139,24 @@ Say - First Blood: %server_firstblood%, Most Knives: %server_knivesplayer% %serv
 Say - Last Blood: %server_lastbloodplayer%, Most Kills: %server_mostkillsplayer% %server_mostkills%
 Say - Most Deaths: %server_deadplayer% %server_dead%
 #kill Admin Limit
-On kill;Victim Admin;Not Protected;Not Admin;Playerfirst;Set %killadminby[%p%]% 1
+On kill;Victim Admin;Not Protected;Not Admin;Playerfirst;Set %killadminby[%p%]% 1;Set %AdminAngrylevel[%p%]% 0
 On kill;Victim Admin;Not Protected;Not Admin;Not Playerfirst;Incr %killladminby[%p%]%
-On kill;Victim Admin;Not Protected;Not Admin;If %killladminby[%p%]% > 3;Exec Admin.killPlayer;Decr %killadminby[%p%]%;PlayerSay Suspicious Stats
+On kill;Victim Admin;Not Protected;Not Admin;If %killladminby[%p%]% > 3;Exec Admin.killPlayer;Decr %killadminby[%p%]%;Incr %AdminAngrylevel[%p%]%;PlayerSay Suspicious Stats
+On kill;Victim Admin;Not Protected;Not Admin;IF %AdminAngrylevel[%p%]% > 2;Tempban 5 [AUTOADMIN Anti-Cheating] Suspicious Stats;Set %AdminAngrylevel[%p%]% 0;Set %killadminby[%p%]% 0
 On kill;Admin;if %killadminby[%v%]% > 1;Decr %killadminby[%v%]%
 #fake kick
 On Say;Admin;Text !fuck;TargetPlayer;TargetAction Tempban 1 [AUTOADMIN Adkats] Suspicious Stats or Offensive Actions
 On Say;Admin;Text !fuckyou;TargetPlayer;TargetAction Tempban 1440 [Anti-Cheating AUTOADMIN] Suspicious Stats
+#Prison No Explosive
+On Round;Map Prison;Set %ExplosiveLimit% 1
+On Round;Not Map Prison;Set %ExplosiveLimit% 0
+On RoundOver;Set %ExplosiveLimit% 0
+On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% == 1;PlayerFirst;Set %explosivecnt[%p%]% 1;PlayerYell No Explosive in Prison!;Exec Admin.killplayer;Say %p% has been killed due to using explosive in prison!
+On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% == 1;If %explosivecnt[%p%]% > 0;Incr %explosivecnt%;
+On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% == 1;If %explosivecnt[%p%]% > 1;Exec Admin.killplayer;PlayerYell No Explosive, next time explosive = ban!
+On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% == 1;If %explosivecnt[%p%]% > 2;Pbkick 0 No Explosive;Say Player [%p%] has been kicked for using explosive in Prison;Set %explosivecnt[%p%]% 0
+#LongShot Report
+On kill;Range 500;Say Player [%p%] killed [%v%] from [%r%m] Away!!!
+On kill;Range 800;Both GODLIKE!!! Player [%p%] killed [%v%] from [%r%m] Away!!! 
 #Knife Kill Report
 On kill;Damage Melee;Yell 10 ========> [%p%] has taken [%v%]'s dog tag!!! <========
