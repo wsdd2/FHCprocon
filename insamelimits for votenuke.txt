@@ -1,14 +1,21 @@
-
-double percent = 10; // CUSTOMIZE: of losing team that has to vote
+/* VERSION 0.9.15/R6 */
+/*
+Set the limit to evaluate OnAnyChat. Set the Action to None.
+Set first_check to this Expression:
+BF3:
+(Regex.Match(server.Gamemode, @"(Conquest|Rush)").Success)
+BF4:
+(Regex.Match(server.Gamemode, @"(Conquest|Rush|Domination)").Success)
+*/ 
+double percent = 25; // CUSTOMIZE: of losing team that has to vote
 double timeout = 5.0; // CUSTOMIZE: number of minutes before vote times out
 int minPlayers = 16; // CUSTOMIZE: minimum players to enable vote
-double minTicketPercent = 15; // CUSTOMIZE: minimum ticket percentage remaining in the round
-double minTicketGap = 200; // CUSTOMIZE: minimum ticket gap between winning and losing teams
-
+double minTicketPercent = 10; // CUSTOMIZE: minimum ticket percentage remaining in the round
+double minTicketGap = 15; // CUSTOMIZE: minimum ticket gap between winning and losing teams
+List<PlayerInfoInterface> campers, voters, losers; // No define in default head files.
 String kCamp = "votecamp";
 String kOncePrefix = "votecamp_once_";
 String kVoteTime = "votecamp_time";
-
 int level = 2;
 
 try {
@@ -26,7 +33,7 @@ Action<String> ChatPlayer = delegate(String name) {
 
 /* Parse the command */
 
-Match campMatch = Regex.Match(player.LastChat, @"^\s*!vote\s*nuke", RegexOptions.IgnoreCase);
+Match campMatch = Regex.Match(player.LastChat, @"^\s*!vote\s*camp", RegexOptions.IgnoreCase);
 
 /* Bail out if not a proper vote */
 
@@ -51,8 +58,17 @@ if (Math.Abs(t1 - t2) < minTicketGap) {
 }
 
 /* Bail out if voter is not on the losing team */
+int losing ;
+if(t1 <= t2)
+{
+	losing = 1 ;
 
-int losing = (t1 < t2) ? 1 : 2;
+}
+else
+{
+	losing = 2 ;
+}
+
 
 if (player.TeamId != losing) {
     msg = "You are not on the losing team!";
@@ -81,9 +97,11 @@ if (server.PlayerCount < minPlayers) {
 /* Votes are kept with the voter */
 /* If the voter leaves, his votes are not counted */
 
-if (!player.RoundData.issetBool(kCamp)) player.RoundData.setBool(kCamp, true);
+if (!player.RoundData.issetBool(kCamp)) 
+	player.RoundData.setBool(kCamp, true);
 
-if (level >= 2) plugin.ConsoleWrite("^b[VoteCamp]^n " + player.FullName + " voted to stop camping");
+if (level >= 2) 
+	plugin.ConsoleWrite("^b[VoteCamp]^n " + player.FullName + " voted to stop camping");
 
 msg = "You voted to stop the other team from camping your deployment";
 ChatPlayer(player.Name);
@@ -91,8 +109,15 @@ ChatPlayer(player.Name);
 /* Tally the votes */
 
 int votes = 0;
-List<PlayerInfoInterface> losers = (losing == 1) ? team1.players : team2.players;
-
+//List<PlayerInfoInterface> losers = (losing == 1) _ team1.players : team2.players;
+if (losing == 1)
+{
+	List<PlayerInfoInterface> losers = team1.players;
+}
+else
+{
+	List<PlayerInfoInterface> losers = team2.players;
+}
 /* Bail out if too much time has past */
 
 if (!server.RoundData.issetObject(kVoteTime)) {
@@ -131,15 +156,34 @@ int remain = needed - votes;
 
 if (level >= 3) plugin.ConsoleWrite("^b[VoteCamp]^n needed = " + needed);
 
-String campers = (losing == 1) ? "RU" : "US"; // BF3
-String voters = (losing == 1) ? "US" : "RU"; // BF3
-
 if (server.GameVersion == "BF4") {
     String[] factionNames = new String[]{"US", "RU", "CN"};
-    int f1 = (team1.Faction == -1 || team1.Faction > 2) ? 0 : team1.Faction;
-    int f2 = (team2.Faction == -1 || team2.Faction > 2) ? 1 : team2.Faction;
-    campers = (losing == 1) ? factionNames[f2] : factionNames[f1];
-    voters = (losing == 1) ? factionNames[f1] : factionNames[f2];
+    //int f1 = (team1.Faction == -1 || team1.Faction > 2) _ 0 : team1.Faction;
+    //int f2 = (team2.Faction == -1 || team2.Faction > 2) _ 1 : team2.Faction;
+    int f1,f2;
+    if (team1.Faction == -1 || team1.Faction > 2)
+    {
+    	f1 = 0;
+    	f2 = 1;
+    }
+    else
+    {
+ 		f1 = team1.Faction;
+ 		f2 = team2.Faction;
+    }
+    //campers = (losing == 1) _ factionNames[f2] : factionNames[f1];
+    //voters = (losing == 1) _ factionNames[f1] : factionNames[f2];
+    if (losing == 1)
+    {
+    	campers = factionNames[f2];
+    	voters = factionNames[f1];
+    }
+    else
+    {
+    	campers = factionNames[f1];
+    	voters = factionNames[f2];
+    }
+
 }
 
 if (remain > 0) {
@@ -157,8 +201,17 @@ plugin.SendTeamMessage(losing, msg);
 plugin.SendGlobalMessage(msg, 15);
 if (level >= 2) plugin.ConsoleWrite("^b[VoteCamp]^n " + msg);
 
-List<PlayerInfoInterface> bad = (losing == 1) ? team2.players : team1.players;
+//List<PlayerInfoInterface> bad = (losing == 1) _ team2.players : team1.players;
+if (losing == 1)
+{
+	List<PlayerInfoInterface> bad = team2.players;
+}
+else
+{
+	List<PlayerInfoInterface> bad = team1.players;
+}
 foreach (PlayerInfoInterface nuke in bad) {
+    if(plugin.isInWhitelist(nuke) == false)
     plugin.KillPlayer(nuke.Name, 1);
     if (level >= 3) plugin.ConsoleWrite("^b[VoteCamp]^n killing " + nuke.FullName);
 }

@@ -108,8 +108,8 @@ On Say;Admin;Text !ok_expl;Set %no_explo% 0;Say Admin [%p%] has cancelled ban of
 On Round;if not %m% == MP_Prison;Set %no_explo% 0
 On Round;if %m% == MP_Prison;Set %no_explo% 1
 On Round;Set %no_explo% 0
-On Say;Admin;Text !check_explo;if %no_explo% == 0;PlayerSay Now %no_explo% values 0, explosives available!
-On Say;Admin;Text !check_explo;if %no_explo% == 1;PlayerSay Now %no_explo% values 1, explosives unavailable!
+On Say;Admin;Text !check_explo;if %no_explo% == 0;PlayerSay Now [Value:no_explo] values 0, explosives available!
+On Say;Admin;Text !check_explo;if %no_explo% == 1;PlayerSay Now [Value:no_explo] values 1, explosives unavailable!
 On Spawn;if %no_explo% == 1;Playerfirst;PlayerYell 10 No explosive in Locker (except VIP)
 On Spawn;if %no_explo% == 1;Not Protected;Not Admin;Playerfirst;PlayerYell 20 Only VIP can use explosive in Locker (MP_Prison);
 On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;Playerfirst;Set %Explosivekills[%p%]% 1;Kill;PlayerYell 10 NO EXPLOSIVE!!!;Playersay Vip(30RMB/month) have no limits;
