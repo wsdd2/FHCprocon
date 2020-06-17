@@ -1,13 +1,15 @@
 #FHC BF4/BF3 Proconrulz
 #Author:wsdd2
 #CopyRight:Fallen Hall Clan
-#Version:1.1.5
+#Version:1.1.6
 #Update:Add No Explosive Judgement, admin can decide to toggle %no_explo%
 #
 #JOINER/LEAVER LOG
 On Join;Protected;Say Welcome our VIP ^%p%^!!!
 On Join;Not Admin;Not Protected;Say Welcome  ^%p%^!!!
 On Join;Protected;Not Admin;Say Welcome VIP [%p%] !
+On Join;PlayerSay Proconrulz Written By [FHC]wsdd2, Version 1.1.6
+On Round;Say Proconrulz Written By [FHC]wsdd2, Version 1.1.6, qq 351344673
 On Join;Admin;Say Admin ---[%p%]--- Online !
 On Leave;Say ^%p%^0 has left the server
 On Spawn;Serverfirst;PlayerYell 15 YY 18068914 , TeamSpeak vip8.ts1.cn:10013
