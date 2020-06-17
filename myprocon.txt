@@ -9,6 +9,7 @@ On Join;Protected;Say Welcome our VIP ^%p%^!!!
 On Join;Not Admin;Not Protected;Say Welcome  ^%p%^!!!
 On Join;Protected;Not Admin;Say Welcome VIP [%p%] !
 On Join;PlayerSay Proconrulz Written By [FHC]wsdd2, Version 1.1.6
+On Spawn;Playercount 1;PlayerSay Type !menu to check available commands
 On Round;Say Proconrulz Written By [FHC]wsdd2, Version 1.1.6, qq 351344673
 On Join;Admin;Say Admin ---[%p%]--- Online !
 On Leave;Say ^%p%^0 has left the server
@@ -162,3 +163,18 @@ On kill;Range 500;Say Player [%p%] killed [%v%] from [%r%m] Away!!!
 On kill;Range 800;Both GODLIKE!!! Player [%p%] killed [%v%] from [%r%m] Away!!! 
 #Knife Kill Report
 On kill;Damage Melee;Yell 10 ========> [%p%] has taken [%v%]'s dog tag!!! <========
+#Menu Instructions
+On Say;Not Admin;Text !menu;
+PlayerSay - Command: !killme !sniper !shotgun !mm !vip @myguid @loc;
+PlayerSay - !killme to suicide without increase death count;
+PlayerSay - !sniper !shotgun to check sniper or shotgun Limit;
+PlayerSay - !mm to force move once per round (can't use when close to end);
+PlayerSay - !vip to get vip information
+PlayerSay - @myguid to check your own partial GUID, @loc to tell server location
+On Say;Text !vip;
+PlayerSay - VIP:20RMB/month; 
+PlayerSay - [No need to line up; Never got kicked (except autoadmin) ;No Weapon Limit];
+PlayerSay - Join QQ Group 299271357 to buy VIP
+On Say;Admin;Text !menu;
+PlayerSay - Command: !kill !kick !ban !tban !pkick !pban !fmove !nextlevel;
+PlayerSay - Command: !check_explo !ok_expl !cancel_expl !ban_expl @guid !nuke
