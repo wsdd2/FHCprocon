@@ -13,8 +13,8 @@ On Spawn;Playercount 1;PlayerSay Type !menu to check available commands
 On Round;Say Proconrulz Written By [FHC]wsdd2, Version 1.1.6, qq 351344673
 On Join;Admin;Say Admin ---[%p%]--- Online !
 On Leave;Say ^%p%^0 has left the server
-On Spawn;Serverfirst;PlayerYell 15 YY 18068914 , TeamSpeak vip8.ts1.cn:10013
-On Spawn;Serverfirst;PlayerSay you can type !votecamp to start a nuke against base raping
+On Spawn;Playerfirst;PlayerYell 15 YY 18068914 , TeamSpeak vip8.ts1.cn:10013
+On Spawn;Playerfirst;PlayerSay you can type !votecamp to start a nuke against base raping
 #High ping kick
 On Spawn;Not protected;Not Admin;Serverfirst;If %ping% > 250;Set %highpingc% 1;PlayerSay Your ping is too high,go to check your network or you will be kicked!
 On Spawn;Not protected;Not Admin;if %ping% > 250;if %highpingc% > 0;if %highpingc% < 3;Incr %highpingc%;PlayerSay Last warning for high ping
@@ -160,16 +160,24 @@ On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% =
 On kill;Not Admin;Not Protected;Damage ProjectileExplosive;If %ExplosiveLimit% == 1;If %explosivecnt[%p%]% > 2;Pbkick 0 No Explosive;Say Player [%p%] has been kicked for using explosive in Prison;Set %explosivecnt[%p%]% 0
 #LongShot Report
 On kill;Range 500;Say Player [%p%] killed [%v%] from [%r%m] Away!!!
-On kill;Range 800;Both 10 GODLIKE!!! Player [%p%] killed [%v%] from [%r%m] Away!!! 
+On kill;Range 800;Both GODLIKE!!! Player [%p%] killed [%v%] from [%r%m] Away!!! 
 #Knife Kill Report
 On kill;Damage Melee;Yell 10 ========> [%p%] has taken [%v%]'s dog tag!!! <========
 #Menu Instructions
 On Say;Not Admin;Text !menu;
+PlayerSay - Command: !killme !sniper !shotgun !mm !vip !time @myguid @loc;
+PlayerSay - !killme to suicide without increase death count;
+PlayerSay - !sniper !shotgun to check sniper or shotgun Limit;
+PlayerSay - !mm to force move once per round (can't use when close to end);
+PlayerSay - !time to get server time;
+PlayerSay - !vip to get vip information;
+PlayerSay - @myguid to check your own partial GUID, @loc to tell server location
+On Say;Admin;Text !Advanced_menu;
 PlayerSay - Command: !killme !sniper !shotgun !mm !vip @myguid @loc;
 PlayerSay - !killme to suicide without increase death count;
 PlayerSay - !sniper !shotgun to check sniper or shotgun Limit;
 PlayerSay - !mm to force move once per round (can't use when close to end);
-PlayerSay - !vip to get vip information
+PlayerSay - !vip to get vip information;
 PlayerSay - @myguid to check your own partial GUID, @loc to tell server location
 On Say;Text !vip;
 PlayerSay - VIP:20RMB/month; 
@@ -177,8 +185,7 @@ PlayerSay - No need to line up, Never got kicked (except autoadmin), No Weapon L
 PlayerSay - Join QQ Group 299271357 to buy VIP
 On Say;Admin;Text !menu;
 PlayerSay - Command: !kill !kick !ban !tban !pkick !pban !fmove !nextlevel;
-PlayerSay - Command: !check_explo !ok_expl !cancel_expl !ban_expl @guid !nuke;
-PlayerSay - @myguid to check your own partial GUID, @loc to tell server location
+PlayerSay - Command: !check_explo !ok_expl !cancel_expl !ban_expl @guid !nuke
 On Say;Text !time;
 PlayerSay - Time: [%ymd%] [%hms%]
 On Say;Text !alltime;
