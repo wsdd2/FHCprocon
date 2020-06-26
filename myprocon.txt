@@ -23,7 +23,7 @@ On Spawn;Not protected;Not Admin;if %highpingc% > 2;kick your ping is too high;S
 On Spawn;ServerFirst;Set %kills2[%p%]% 0;Set %deaths2[%p%]% 0;Set %hs2[%p%]% 0
 On Kill;Incr %kills2[%p%]%
 On Kill;Headshot;incr %hs2[%p%]%
-On Say;Admin;Text lead;Exec Squad.Leader %ptk% %psk% %p%
+On Say;Admin;Text !lead;Exec Squad.Leader %ptk% %psk% %p%
 On Spawn;PlayerCount 1;Incr %deaths2[%p%]%
 On Kill;Set %proc.2[%p%]% %hs2[%p%]% / %kills2[%p%]% * 100
 On Kill;Set %kd2[%p%]% %kills2[%p%]%/%deaths2[%p%]%
@@ -103,6 +103,7 @@ On say;Text Fuck you admin;Text u admin;Text you admin;
 On Say;Admin;Text !pkick;TargetPlayer;TargetAction PBkick 0 No Packet Follow
 On Say;Admin;Text !kill;TargetPlayer;TargetAction kill
 On Say;Admin;Text !ban_expl;Set %no_explo% 1;Say Admin [%p%] has banned using of explosive;Say Now Explosives are unavailable;Yell No Explosives now!
+On Say;Admin;Text !no_expl;Set %no_explo% 1;Say Admin [%p%] has banned using of explosive;Say Now Explosives are unavailable;Yell No Explosives now!
 On Say;Admin;Text !cancel_expl;Set %no_explo% 0;Say Admin [%p%] has cancelled ban of using of explosive;Yell Explosives Available now!
 On Say;Admin;Text !ok_expl;Set %no_explo% 0;Say Admin [%p%] has cancelled ban of using of explosive;Yell Explosives Available now!
 On Round;if not %m% == MP_Prison;Set %no_explo% 0
@@ -115,8 +116,9 @@ On Spawn;if %no_explo% == 1;Not Protected;Not Admin;Playerfirst;PlayerYell 20 On
 On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;Playerfirst;Set %Explosivekills[%p%]% 1;Kill;PlayerYell 10 NO EXPLOSIVE!!!;Playersay Vip(30RMB/month) have no limits;
 On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills[%p%]% > 0;if %Explosivekills[%p%]% < 3;Kill;PlayerYell Last WARN: Only vip can use explosive in Locker;Incr %Explosivekills[%p%]%
 On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills[%p%]% > 2;Kick;Say player %p% has been kicked for using explosives in Locker, only VIP can use explosive in Locker!!!;Set %Explosivekills[%p%]% 0
-#On Say;Admin;Text !fmove;TargetPlayer;Team 1;Exec admin.MovePlayer %p% 2 1 true
-#On Say;Admin;Text !fmove;TargetPlayer;Team 2;Exec admin.MovePlayer %p% 1 1 true
+On Say;Protected;Text !moveme;Team 1;Exec admin.MovePlayer %p% 2 1 true
+On Say;Protected;Text !moveme;Team 2;Exec admin.MovePlayer %p% 1 1 true
+On Say;Not Protected;Not Admin;Text !moveme;PlayerSay Join VIP to use !moveme command, text !vip for more VIP details
 On Say;Admin;Text !admin;PlayerSay You are admin, you can use !nuke to start a nuke or !ban_expl to ban explosive (!ok_expl to make available)
 On Say;Not Admin;Text !admin;PlayerSay Sorry you don't have access of administrator, please contact qq 351344673 to buy.
 ###### End of round stats v1.0 by tarreltje #####
@@ -165,7 +167,7 @@ On kill;Range 800;Both GODLIKE!!! Player [%p%] killed [%v%] from [%r%m] Away!!!
 On kill;Damage Melee;Yell 10 ========> [%p%] has taken [%v%]'s dog tag!!! <========
 #Menu Instructions
 On Say;Not Admin;Text !menu;
-PlayerSay - Command: !killme !sniper !shotgun !mm !vip !time @myguid @loc;
+PlayerSay - Command: !killme !sniper !shotgun !mm !vip !time !moveme @myguid @loc;
 PlayerSay - !killme to suicide without increase death count;
 PlayerSay - !sniper !shotgun to check sniper or shotgun Limit;
 PlayerSay - !mm to force move once per round (can't use when close to end);
@@ -190,6 +192,9 @@ On Say;Text !time;
 PlayerSay - Time: [%ymd%] [%hms%]
 On Say;Text !alltime;
 Say - Time Now:[%ymd%] - [%hms%];Yell 8 Time Now:[%ymd%] - [%hms%]
-On Say;Admin;Text !ptyell;TargetPlayer;TargetAction PlayerYell [AUTOADMIN] From %p% : %targettext%
-On Say;Admin;Text !ptsay;TargetPlayer;TargetAction PlayerSay [AUTOADMIN] From %p% : %targettext%
+On Say;Admin;Text !ptyell;TargetPlayer;TargetAction PlayerYell [AUTOADMIN] From Admin [%p%] : %targettext%
+On Say;Admin;Text !ptsay;TargetPlayer;TargetAction PlayerSay [AUTOADMIN] From Admin [%p%] : %targettext%
 On Say;Admin;Text !ayell;Yell %targettext%
+On Say;Protected;Text !checkVIP;PlayerSay [%p%] you are VIP now!
+On Say;Not Protected;Text !checkVIP;PlayerSay Sorry you are not VIP, type !vip for more details
+On Join;If %p% == wsdd2;Say FULL RIGHTS ADMIN [wsdd2] has joined server.
