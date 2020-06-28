@@ -113,11 +113,27 @@ On Say;Admin;Text !check_explo;if %no_explo% == 0;PlayerSay Now [Value:no_explo]
 On Say;Admin;Text !check_explo;if %no_explo% == 1;PlayerSay Now [Value:no_explo] values 1, explosives unavailable!
 On Spawn;if %no_explo% == 1;Playerfirst;PlayerYell 10 No explosive in Locker (except VIP)
 On Spawn;if %no_explo% == 1;Not Protected;Not Admin;Playerfirst;PlayerYell 20 Only VIP can use explosive in Locker (MP_Prison);
-On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;Playerfirst;Set %Explosivekills[%p%]% 1;Kill;PlayerYell 10 NO EXPLOSIVE!!!;Playersay Vip(30RMB/month) have no limits;
-On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills[%p%]% > 0;if %Explosivekills[%p%]% < 3;Kill;PlayerYell Last WARN: Only vip can use explosive in Locker;Incr %Explosivekills[%p%]%
-On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage Explosive,ProjectileExplosive;if %Explosivekills[%p%]% > 2;Kick;Say player %p% has been kicked for using explosives in Locker, only VIP can use explosive in Locker!!!;Set %Explosivekills[%p%]% 0
+On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage ProjectileExplosive;Playerfirst;Set %Explosivekills[%p%]% 1;Kill;PlayerYell 10 NO EXPLOSIVE!!!;Playersay Vip(30RMB/month) have no limits;
+On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage ProjectileExplosive;if %Explosivekills[%p%]% > 0;if %Explosivekills[%p%]% < 3;Kill;PlayerYell Last WARN: Only vip can use explosive in Locker;Incr %Explosivekills[%p%]%
+On kill;if %no_explo% == 1;Not Protected;Not Admin;Damage ProjectileExplosive;if %Explosivekills[%p%]% > 2;Kick;Say player %p% has been kicked for using explosives in Locker, only VIP can use explosive in Locker!!!;Set %Explosivekills[%p%]% 0
 On Say;Protected;Text !moveme;Team 1;Exec admin.MovePlayer %p% 2 1 true
 On Say;Protected;Text !moveme;Team 2;Exec admin.MovePlayer %p% 1 1 true
+
+#35 kills switch
+#On Spawn;Playerfirst;Set %trigger_cnt[%p%]% 0;Set %is_autoswitch[%p%]% 0;Set %player_temp_team[%p%]% %pt%
+#On kill;If %is_autoswitch[%p%]% == 0;Incr %trigger_cnt[%p%]%
+#On kill;If %trigger_cnt[%p%]% == 1;Set %is_autoswitch[%p%]% 0
+#On kill;If %trigger_cnt[%p%]% > 35;If %is_autoswitch[%p%]% == 0;Team 1;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
+#On kill;If %trigger_cnt[%p%]% > 35;If %is_autoswitch[%p%]% == 0;Team 2;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
+#On Spawn;If %trigger_cnt[%p%]% > 35;If %pt% != %player_temp_team[%p%]%;Set %is_autoswitch[%p%]% 1;Set %trigger_cnt[%p%]% 0;Set %player_temp_team[%p%]% %pt%
+#一开始设置计算杀敌数为%trigger_cnt[%p%]%，设置%is_autoswitch[%p%]% 表示是否自动换队过，设置%player_temp_team[%p%]% 为玩家初始队伍%pt%
+#当没有被插件换过边的时候，杀敌计数一直增加
+#杀敌超过35杀时，开始尝试换边，尝试换边如果换边成功造成的结果就是玩家的现在队伍%pt%和初始队伍不同
+#如果下一次复活的时候发现杀敌计数超过35杀，而且队伍和初始队伍不同，那么代表换边成功，就将%is_autoswitch[%p%]%设置为1，然后将杀敌计数归为0
+#当自动换边判定为1时，只要更新一次击杀记录，就再把%is_autoswitch[%p%]%改回0
+#之后当击杀数再次达到或满足35杀的时候，会再次触发35杀尝试换边
+#换边尝试的时候必须保证  %is_autoswitch[%p%]% 是0，即还没有成功换边
+
 On Say;Not Protected;Not Admin;Text !moveme;PlayerSay Join VIP to use !moveme command, text !vip for more VIP details
 On Say;Admin;Text !admin;PlayerSay You are admin, you can use !nuke to start a nuke or !ban_expl to ban explosive (!ok_expl to make available)
 On Say;Not Admin;Text !admin;PlayerSay Sorry you don't have access of administrator, please contact qq 351344673 to buy.
