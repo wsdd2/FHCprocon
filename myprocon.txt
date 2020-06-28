@@ -120,12 +120,18 @@ On Say;Protected;Text !moveme;Team 1;Exec admin.MovePlayer %p% 2 1 true
 On Say;Protected;Text !moveme;Team 2;Exec admin.MovePlayer %p% 1 1 true
 
 #35 kills switch
-#On Spawn;Playerfirst;Set %trigger_cnt[%p%]% 0;Set %is_autoswitch[%p%]% 0;Set %player_temp_team[%p%]% %pt%
-#On kill;If %is_autoswitch[%p%]% == 0;Incr %trigger_cnt[%p%]%
-#On kill;If %trigger_cnt[%p%]% == 1;Set %is_autoswitch[%p%]% 0
-#On kill;If %trigger_cnt[%p%]% > 35;If %is_autoswitch[%p%]% == 0;Team 1;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
-#On kill;If %trigger_cnt[%p%]% > 35;If %is_autoswitch[%p%]% == 0;Team 2;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
-#On Spawn;If %trigger_cnt[%p%]% > 35;If %pt% != %player_temp_team[%p%]%;Set %is_autoswitch[%p%]% 1;Set %trigger_cnt[%p%]% 0;Set %player_temp_team[%p%]% %pt%
+On Round;Set %klt% 35
+On Say;Admin;Text !debug_switch;Set %klt% 3;
+PlayerSay - You are in debugging mode, now kill limit are 3;
+PlayerSay - Text !end_debug to stop debugging
+On Say;Admin;Text !end_debug;Set %klt% 35
+On Spawn;Playerfirst;Set %trigger_cnt[%p%]% 0;Set %is_autoswitch[%p%]% 0;Set %player_temp_team[%p%]% %pt%
+
+On kill;If %is_autoswitch[%p%]% == 0;Incr %trigger_cnt[%p%]%
+On kill;If %trigger_cnt[%p%]% == 1;Set %is_autoswitch[%p%]% 0
+On kill;If %trigger_cnt[%p%]% > %klt%;If %is_autoswitch[%p%]% == 0;Team 1;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
+On kill;If %trigger_cnt[%p%]% > %klt%;If %is_autoswitch[%p%]% == 0;Team 2;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You have killed more than 35 kills, triggered team switch!
+On Spawn;If %trigger_cnt[%p%]% > %klt%;If %pt% != %player_temp_team[%p%]%;Set %is_autoswitch[%p%]% 1;Set %trigger_cnt[%p%]% 0;Set %player_temp_team[%p%]% %pt%
 #一开始设置计算杀敌数为%trigger_cnt[%p%]%，设置%is_autoswitch[%p%]% 表示是否自动换队过，设置%player_temp_team[%p%]% 为玩家初始队伍%pt%
 #当没有被插件换过边的时候，杀敌计数一直增加
 #杀敌超过35杀时，开始尝试换边，尝试换边如果换边成功造成的结果就是玩家的现在队伍%pt%和初始队伍不同
