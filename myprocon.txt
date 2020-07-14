@@ -169,7 +169,7 @@ Say -
 Say - First Blood: %server_firstblood%, Most Knives: %server_knivesplayer% %server_knives%
 Say - Last Blood: %server_lastbloodplayer%, Most Kills: %server_mostkillsplayer% %server_mostkills%
 Say - Most Deaths: %server_deadplayer% %server_dead%
-#kill Admin Limit
+#Admin Protection
 On kill;Victim Admin;Not Protected;Not Admin;Playerfirst;Set %killadminby[%p%]% 1;Set %AdminAngrylevel[%p%]% 0
 On kill;Victim Admin;Not Protected;Not Admin;Not Playerfirst;Incr %killladminby[%p%]%
 On kill;Victim Admin;Not Protected;Not Admin;If %killladminby[%p%]% > 3;Exec Admin.killPlayer;Decr %killadminby[%p%]%;Incr %AdminAngrylevel[%p%]%;PlayerSay Suspicious Stats
