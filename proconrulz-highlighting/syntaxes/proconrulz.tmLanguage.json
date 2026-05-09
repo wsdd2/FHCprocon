@@ -1,0 +1,144 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ProconRulz",
+  "scopeName": "source.proconrulz",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#variables" },
+    { "include": "#ruleSeparators" },
+    { "include": "#triggers" },
+    { "include": "#conditions" },
+    { "include": "#actions" },
+    { "include": "#operators" },
+    { "include": "#damageTypes" },
+    { "include": "#mapKeys" },
+    { "include": "#mapModes" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.proconrulz",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.indexed.proconrulz",
+          "match": "%[A-Za-z][A-Za-z0-9_]*(?:\\.[0-9]+)?(?:\\[[^\\]]+\\])+%"
+        },
+        {
+          "name": "variable.language.substitution.proconrulz",
+          "match": "%(?:p|pt|ptk|ps|psk|v|vt|k|kk|w|wk|d|dk|spec|speck|r|n|ts1|ts2|pts|c|tc|sc|h|m|mm|t|targettext|ping|text|pb_guid|ea_guid|ip|pcountry|pcountrykey|vcountry|vcountrykey|score|team_score|hms|ymd|seconds)%"
+        },
+        {
+          "name": "variable.other.rulz.proconrulz",
+          "match": "%[A-Za-z][A-Za-z0-9_]*(?:\\.[0-9]+)?%"
+        }
+      ]
+    },
+    "ruleSeparators": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.rule.proconrulz",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.continuation.proconrulz",
+          "match": "^\\s*\\+"
+        }
+      ]
+    },
+    "triggers": {
+      "patterns": [
+        {
+          "name": "keyword.control.trigger.proconrulz",
+          "match": "(?i)\\bOn\\s+(?:RoundOver|Round|Spawn|Kill|TeamKill|Suicide|Join|Leave|Say)\\b"
+        }
+      ]
+    },
+    "conditions": {
+      "patterns": [
+        {
+          "name": "keyword.operator.logical.proconrulz",
+          "match": "(?i)\\bNot\\b"
+        },
+        {
+          "name": "keyword.control.conditional.if.proconrulz",
+          "match": "(?i)\\bIf\\b"
+        },
+        {
+          "name": "support.function.condition.proconrulz",
+          "match": "(?i)\\b(?:Admin|Admins|Protected|Victim|Team|Teamsize|Map|MapMode|Headshot|Weapon|Damage|Kit|Spec|TeamKit|TeamWeapon|TeamDamage|TeamSpec|Range|PlayerCount|Count|TeamCount|ServerCount|Rate|PlayerFirst|PlayerOnce|TeamFirst|ServerFirst|Ping|Text|TargetPlayer)\\b"
+        }
+      ]
+    },
+    "actions": {
+      "patterns": [
+        {
+          "name": "support.function.action.message.proconrulz",
+          "match": "(?i)\\b(?:Say|PlayerSay|SquadSay|TeamSay|VictimSay|AdminSay|Yell|PlayerYell|SquadYell|TeamYell|Log|Both|All)\\b"
+        },
+        {
+          "name": "support.function.action.punish.proconrulz",
+          "match": "(?i)\\b(?:Kill|Kick|Ban|TempBan|PBKick|PBBan)\\b"
+        },
+        {
+          "name": "support.function.action.variable.proconrulz",
+          "match": "(?i)\\b(?:Set|Incr|Decr)\\b"
+        },
+        {
+          "name": "support.function.action.exec.proconrulz",
+          "match": "(?i)\\b(?:TargetAction|Exec|End|Continue)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.proconrulz",
+          "match": "==|!=|>=|<=|>|<|="
+        },
+        {
+          "name": "keyword.operator.arithmetic.proconrulz",
+          "match": "\\+|\\-|\\*|/"
+        }
+      ]
+    },
+    "damageTypes": {
+      "patterns": [
+        {
+          "name": "constant.language.damage.proconrulz",
+          "match": "(?i)\\b(?:None|Nonlethal|Impact|Melee|Handgun|AssaultRifle|LMG|SMG|SniperRifle|Shotgun|Explosive|ProjectileExplosive|VehicleWater|VehicleAir|VehicleStationary|VehicleLight|VehicleHeavy)\\b"
+        }
+      ]
+    },
+    "mapKeys": {
+      "patterns": [
+        {
+          "name": "constant.language.map.proconrulz",
+          "match": "\\b(?:MP_001|MP_003|MP_007|MP_011|MP_012|MP_013|MP_017|MP_018|MP_Subway|XP1_001|XP1_002|XP1_003|XP1_004)\\b"
+        }
+      ]
+    },
+    "mapModes": {
+      "patterns": [
+        {
+          "name": "constant.language.mapmode.proconrulz",
+          "match": "\\b(?:ConquestLarge0|ConquestSmall0|ConquestSmall1|RushLarge0|SquadRush0|SquadDeathMatch0|TeamDeathMatch0)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.proconrulz",
+          "match": "\\b\\d+(?:\\.\\d+)?\\b"
+        }
+      ]
+    }
+  }
+}

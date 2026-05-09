@@ -1,0 +1,39 @@
+{
+  "name": "fhc-proconrulz-syntax",
+  "displayName": "FHC ProconRulz Syntax",
+  "description": "Syntax highlighting for ProconRulz rule files.",
+  "version": "0.0.1",
+  "publisher": "fhc",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "proconrulz",
+        "aliases": [
+          "ProconRulz",
+          "proconrulz"
+        ],
+        "extensions": [
+          ".proconrulz"
+        ],
+        "filenamePatterns": [
+          "*procon*.txt",
+          "*proconrulz*.txt"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "proconrulz",
+        "scopeName": "source.proconrulz",
+        "path": "./syntaxes/proconrulz.tmLanguage.json"
+      }
+    ]
+  }
+}
