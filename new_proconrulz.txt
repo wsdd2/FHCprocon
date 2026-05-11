@@ -21,7 +21,7 @@ On Spawn;PlayerFirst;PlayerSay Type !rules for server rules and !menu for availa
 ############################
 On Say;Text !rules;PlayerSay Rules: keep teams fair, no cheating, no abusive chat, follow admin decisions.
 On Say;Text !rules;PlayerSay AutoAdmin may move high-impact players by KD/KPM and may kick suspicious KPM or headshot stats.
-On Say;Text !menu;PlayerSay Commands: !rules !stats !killme !time !votekick !vote @guid
+On Say;Text !menu;PlayerSay Commands: !rules !stats !killme !time !votekick !ykick !votenuke !yes @guid
 On Say;Text !killme;Exec admin.killPlayer %p%
 On Say;Text !suicide;Exec admin.killPlayer %p%
 On Say;Text !time;PlayerSay Time: [%ymd%] [%hms%]
@@ -31,7 +31,7 @@ On Say;Text @guid;PlayerSay Your EA GUID: %ea_guid%
 ############################
 # ADMIN COMMANDS
 ############################
-On Say;Admin;Text !menu;PlayerSay Admin: !kill !kick !ban !tban !move1 !move2 !votecancel !nextlevel !yell !ptsay !ptyell
+On Say;Admin;Text !menu;PlayerSay Admin: !kill !kick !ban !tban !move1 !move2 !votecancel !nukecancel !nextlevel !yell !ptsay !ptyell
 On Say;Admin;Text !admin;PlayerSay You are an admin. Admin-only commands are enabled.
 On Say;Not Admin;Text !admin;PlayerSay You do not have administrator access.
 
@@ -55,17 +55,49 @@ On Say;Not Admin;Text !tban;PlayerSay You do not have permission to use admin co
 # VOTE KICK
 ############################
 # Vote kick is available only when no admin is online.
-# Usage: !votekick <player> [reason], then other players type !vote.
+# Usage: !votekick <player> [reason], then other players type !ykick.
 On Round;Set %server_votekick_active% 0;Set %server_votekick_need% 5;Set %server_votekick_votes% 0;Set %server_votekick_id% 0
 On Say;Admin;Text !votecancel;Set %server_votekick_active% 0;Set %server_votekick_votes% 0;Say Admin [%p%] cancelled the active vote kick.
 On Say;Admins;Text !votekick;PlayerSay An admin is online. Please ask the admin to handle the issue.
-On Say;Not Admins;Text !votekick;If %server_votekick_active% == 1;PlayerSay A vote kick is already active against %server_votekick_target%. Type !vote to support it.
-On Say;Not Admins;Text !votekick;If %server_votekick_active% == 0;TargetPlayer;Incr %server_votekick_id%;Set %server_votekick_target% %t%;Set %server_votekick_reason% %targettext%;Set %server_votekick_active% 1;Set %server_votekick_votes% 1;Set %server_voted[%p%]% %server_votekick_id%;Say Vote kick started against %t% by %p%. Type !vote to support. Need %server_votekick_need% votes.;Yell 10 Vote kick: %t%. Type !vote to support.
-On Say;Not Admins;Text !vote;If %server_votekick_active% == 0;PlayerSay No active vote kick.
-On Say;Not Admins;Text !vote;If %server_votekick_active% == 1;If %server_voted[%p%]% == %server_votekick_id%;PlayerSay You have already voted against %server_votekick_target%.
-On Say;Not Admins;Text !vote;If %server_votekick_active% == 1;If %server_voted[%p%]% != %server_votekick_id%;Incr %server_votekick_votes%;Set %server_voted[%p%]% %server_votekick_id%;Say Vote kick against %server_votekick_target%: %server_votekick_votes%/%server_votekick_need%.
-On Say;Not Admins;Text !vote;If %server_votekick_active% == 1;If %server_votekick_votes% >= %server_votekick_need%;TargetPlayer %server_votekick_target%;Say Vote kick passed against %t%.;TargetAction Kick Vote kick: %server_votekick_reason%;Set %server_votekick_active% 0;Set %server_votekick_votes% 0
+On Say;Not Admins;Text !votekick;If %server_votekick_active% == 1;PlayerSay A vote kick is already active against %server_votekick_target%. Type !ykick to support it.
+On Say;Not Admins;Text !votekick;If %server_votekick_active% == 0;TargetPlayer;Incr %server_votekick_id%;Set %server_votekick_target% %t%;Set %server_votekick_reason% %targettext%;Set %server_votekick_active% 1;Set %server_votekick_votes% 1;Set %server_voted[%p%]% %server_votekick_id%;Say Vote kick started against %t% by %p%. Type !ykick to support. Need %server_votekick_need% votes.;Yell 10 Vote kick: %t%. Type !ykick to support.
+On Say;Not Admins;Text !ykick;If %server_votekick_active% == 0;PlayerSay No active vote kick.
+On Say;Not Admins;Text !ykick;If %server_votekick_active% == 1;If %server_voted[%p%]% == %server_votekick_id%;PlayerSay You have already voted against %server_votekick_target%.
+On Say;Not Admins;Text !ykick;If %server_votekick_active% == 1;If %server_voted[%p%]% != %server_votekick_id%;Incr %server_votekick_votes%;Set %server_voted[%p%]% %server_votekick_id%;Say Vote kick against %server_votekick_target%: %server_votekick_votes%/%server_votekick_need%.
+On Say;Not Admins;Text !ykick;If %server_votekick_active% == 1;If %server_votekick_votes% >= %server_votekick_need%;TargetPlayer %server_votekick_target%;Say Vote kick passed against %t%.;TargetAction Kick Vote kick: %server_votekick_reason%;Set %server_votekick_active% 0;Set %server_votekick_votes% 0
 On Leave;If %p% == %server_votekick_target%;Set %server_votekick_active% 0;Set %server_votekick_votes% 0;Say Vote kick target left the server. Vote cancelled.
+
+############################
+# VOTE NUKE
+############################
+# If ticket difference is over 50% of the balance ticket gap and server population is over 10,
+# the losing team can vote nuke. Passing requires yes votes from at least half of the losing team.
+On Round;Set %server_nuke_active% 0;Set %server_nuke_votes% 0;Set %server_nuke_id% 0;Set %server_nuke_fire% 0;Set %server_nuke_team% 0;Set %server_nuke_loser% 0;Set %server_nuke_ticketgap% 38
+On Say;Admin;Text !nukecancel;Set %server_nuke_active% 0;Set %server_nuke_votes% 0;Set %server_nuke_fire% 0;Say Admin [%p%] cancelled vote nuke.
+On Say;Text !votenuke;If %ts1% + %ts2% <= 10;PlayerSay Vote nuke requires more than 10 players on the server.
+On Say;Text !votenuke;If %server_nuke_active% == 1;PlayerSay Vote nuke is already active. Losing team can type !yes.
+
+On Say;Team 1;Text !votenuke;If %ts1% + %ts2% > 10;If %server_nuke_active% == 0;If %server_team_score[2]% > %server_team_score[1]% + %server_nuke_ticketgap%;Incr %server_nuke_id%;Set %server_nuke_loser% 1;Set %server_nuke_team% 2;Set %server_nuke_active% 1;Set %server_nuke_votes% 0;Say Vote nuke started by team 1. Type !yes on losing team. Need half of team 1.;Yell 10 Vote nuke started. Losing team type !yes.
+On Say;Team 2;Text !votenuke;If %ts1% + %ts2% > 10;If %server_nuke_active% == 0;If %server_team_score[1]% > %server_team_score[2]% + %server_nuke_ticketgap%;Incr %server_nuke_id%;Set %server_nuke_loser% 2;Set %server_nuke_team% 1;Set %server_nuke_active% 1;Set %server_nuke_votes% 0;Say Vote nuke started by team 2. Type !yes on losing team. Need half of team 2.;Yell 10 Vote nuke started. Losing team type !yes.
+On Say;Team 1;Text !votenuke;If %ts1% + %ts2% > 10;If %server_nuke_active% == 0;If %server_team_score[2]% <= %server_team_score[1]% + %server_nuke_ticketgap%;PlayerSay Your team is not behind enough for vote nuke.
+On Say;Team 2;Text !votenuke;If %ts1% + %ts2% > 10;If %server_nuke_active% == 0;If %server_team_score[1]% <= %server_team_score[2]% + %server_nuke_ticketgap%;PlayerSay Your team is not behind enough for vote nuke.
+
+On Say;Text !yes;If %server_nuke_active% == 0;PlayerSay No active vote nuke.
+On Say;Team 1;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% != 1;PlayerSay Only the losing team can vote yes.
+On Say;Team 2;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% != 2;PlayerSay Only the losing team can vote yes.
+On Say;Team 1;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 1;If %server_nuke_voted[%p%]% == %server_nuke_id%;PlayerSay You already voted yes for vote nuke.
+On Say;Team 2;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 2;If %server_nuke_voted[%p%]% == %server_nuke_id%;PlayerSay You already voted yes for vote nuke.
+On Say;Team 1;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 1;If %server_nuke_voted[%p%]% != %server_nuke_id%;Incr %server_nuke_votes%;Set %server_nuke_voted[%p%]% %server_nuke_id%;Say Vote nuke yes: %server_nuke_votes%/%ts1%.
+On Say;Team 2;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 2;If %server_nuke_voted[%p%]% != %server_nuke_id%;Incr %server_nuke_votes%;Set %server_nuke_voted[%p%]% %server_nuke_id%;Say Vote nuke yes: %server_nuke_votes%/%ts2%.
+On Say;Team 1;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 1;If %server_nuke_votes% * 2 >= %ts1%;Say [AUTOADMIN] Vote nuke passed. Leading team will be nuked now.;Yell 10 Vote nuke passed. Leading team nuke incoming.;Set %server_nuke_fire% 1;Set %server_nuke_active% 0
+On Say;Team 2;Text !yes;If %server_nuke_active% == 1;If %server_nuke_loser% == 2;If %server_nuke_votes% * 2 >= %ts2%;Say [AUTOADMIN] Vote nuke passed. Leading team will be nuked now.;Yell 10 Vote nuke passed. Leading team nuke incoming.;Set %server_nuke_fire% 1;Set %server_nuke_active% 0
+
+On Spawn;Team 1;If %server_nuke_fire% == 1;If %server_nuke_team% == 1;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
+On Spawn;Team 2;If %server_nuke_fire% == 1;If %server_nuke_team% == 2;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
+On Kill;Team 1;If %server_nuke_fire% == 1;If %server_nuke_team% == 1;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
+On Kill;Team 2;If %server_nuke_fire% == 1;If %server_nuke_team% == 2;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
+On Say;Team 1;If %server_nuke_fire% == 1;If %server_nuke_team% == 1;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
+On Say;Team 2;If %server_nuke_fire% == 1;If %server_nuke_team% == 2;If %server_nuke_hit[%p%]% != %server_nuke_id%;If %server_kills[%p%]% > 5;If %server_kd.2[%p%]% > 1;Set %server_nuke_hit[%p%]% %server_nuke_id%;PlayerYell 8 Nuked by vote balance.;Kill
 
 ############################
 # ROUND STAT TRACKING
@@ -94,23 +126,23 @@ On Kill;If %server_deaths[%p%]% > 0;VictimSay Killed by %p% | K %server_kills[%p
 # Balance score uses current-round KD, KPM and kills:
 #   power = KD*100 + KPM*100 + kills
 # Move only strong-impact players, and only when their current team is larger or clearly ahead on tickets.
-On Round;Set %server_balance_kills% 25;Set %server_balance_power% 520;Set %server_balance_ticketgap% 75
-On Say;Admin;Text !balance_debug;Set %server_balance_kills% 8;Set %server_balance_power% 350;Set %server_balance_ticketgap% 25;PlayerSay Balance debug thresholds enabled.
-On Say;Admin;Text !balance_normal;Set %server_balance_kills% 25;Set %server_balance_power% 520;Set %server_balance_ticketgap% 75;PlayerSay Balance normal thresholds restored.
+On Round;Set %server_balance_kills% 19;Set %server_balance_min_kills% 20;Set %server_balance_min_kd% 5;Set %server_balance_power% 520;Set %server_balance_ticketgap% 75;Set %server_nuke_ticketgap% 38
+On Say;Admin;Text !balance_debug;Set %server_balance_kills% 19;Set %server_balance_min_kills% 20;Set %server_balance_min_kd% 5;Set %server_balance_power% 350;Set %server_balance_ticketgap% 25;Set %server_nuke_ticketgap% 13;PlayerSay Balance debug thresholds enabled.
+On Say;Admin;Text !balance_normal;Set %server_balance_kills% 19;Set %server_balance_min_kills% 20;Set %server_balance_min_kd% 5;Set %server_balance_power% 520;Set %server_balance_ticketgap% 75;Set %server_nuke_ticketgap% 38;PlayerSay Balance normal thresholds restored.
 
-On Kill;Not Admin;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;Set %server_balance_warn[%p%]% 1
+On Kill;Not Admin;If %server_kills[%p%]% >= %server_balance_min_kills%;If %server_kd.2[%p%]% >= %server_balance_min_kd%;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;Set %server_balance_warn[%p%]% 1
 On Kill;Not Admin;If %server_balance_warn[%p%]% == 1;PlayerSay [AUTOADMIN] You are a high-impact player this round. You may be moved for balance. KD %server_kd.2[%p%]% KPM %server_kpm.2[%p%]%.
 On Kill;Not Admin;If %server_balance_warn[%p%]% == 1;Set %server_balance_warn[%p%]% 2
 
 # Team 1 is larger than Team 2.
-On Kill;Not Admin;Team 1;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %ts1% > %ts2%;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You were moved to balance teams by KD/KPM.
+On Kill;Not Admin;Team 1;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% >= %server_balance_min_kills%;If %server_kd.2[%p%]% >= %server_balance_min_kd%;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %ts1% > %ts2%;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You were moved to balance teams by KD/KPM.
 
 # Team 2 is larger than Team 1.
-On Kill;Not Admin;Team 2;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %ts2% > %ts1%;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You were moved to balance teams by KD/KPM.
+On Kill;Not Admin;Team 2;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% >= %server_balance_min_kills%;If %server_kd.2[%p%]% >= %server_balance_min_kd%;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %ts2% > %ts1%;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You were moved to balance teams by KD/KPM.
 
 # Ticket advantage fallback when team sizes are equal or near equal.
-On Kill;Not Admin;Team 1;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %team_score% > %server_team_score[2]% + %server_balance_ticketgap%;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You were moved because your team is ahead and your KD/KPM is high.
-On Kill;Not Admin;Team 2;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %team_score% > %server_team_score[1]% + %server_balance_ticketgap%;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You were moved because your team is ahead and your KD/KPM is high.
+On Kill;Not Admin;Team 1;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% >= %server_balance_min_kills%;If %server_kd.2[%p%]% >= %server_balance_min_kd%;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %team_score% > %server_team_score[2]% + %server_balance_ticketgap%;Exec admin.MovePlayer %p% 2 1 true;PlayerSay [AUTOADMIN] You were moved because your team is ahead and your KD/KPM is high.
+On Kill;Not Admin;Team 2;If %server_balance_warn[%p%]% == 2;If %server_kills[%p%]% >= %server_balance_min_kills%;If %server_kd.2[%p%]% >= %server_balance_min_kd%;If %server_kills[%p%]% > %server_balance_kills%;If %server_power.1[%p%]% > %server_balance_power%;If %team_score% > %server_team_score[1]% + %server_balance_ticketgap%;Exec admin.MovePlayer %p% 1 1 true;PlayerSay [AUTOADMIN] You were moved because your team is ahead and your KD/KPM is high.
 
 ############################
 # SUSPICIOUS KPM / HEADSHOT CONTROL
